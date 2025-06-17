@@ -1,0 +1,4 @@
+"day_type","avg_orders_per_day","avg_pizzas_per_day","avg_revenue_per_day"
+"Festival","985.33","17433.72","6176037.87"
+"Weekday","324.51","2790.86","1172738.99"
+"Weekend","605.21","7335.68","2596479.24"
