@@ -78,6 +78,24 @@ By leveraging historical order data from Point-of-Sale (POS) systems, we can ana
 | `order_time`     | Time       | Time of the order (HH:MM:SS)                                                |
 
 ---
+---
+
+## 📌 Business Insights & Actions
+
+This analysis uncovered key sales and operational patterns that can help pizza outlets make smarter business decisions:
+
+| 📊 Metric | 💡 Insight | ✅ Action |
+|----------|------------|----------|
+| **Most Popular Pizza** | Farmhouse pizza has the highest number of units sold | Ensure adequate inventory of ingredients like capsicum, onions, and cheese |
+| **Top Revenue Generator** | Loaded pizza brings in the most revenue, though not most sold | Maintain ingredient stock; offer combo deals or targeted promotions |
+| **Most Preferred Size** | Medium-sized pizzas are most frequently ordered | Produce more medium-sized dough and optimize packaging accordingly |
+| **Peak Sales Hours** | 12 PM – 2 PM and 6 PM – 12 AM | Schedule extra kitchen & delivery staff during these hours |
+| **Best Sales Months** | August and October (festival season) | Stock up in advance; consider premium pricing during high-demand periods |
+| **Discount Usage Pattern** | Most discount codes are used on weekends | Design weekend-only campaigns; evaluate ROI from each discount type |
+| **Weekend/Festival Trends** | Sales surge on weekends and festivals | Plan staffing, inventory, and marketing around key dates |
+
+---
+
 
 ## 🙋‍♀️ Author
 
