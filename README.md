@@ -135,7 +135,13 @@ cd ..
 streamlit run predict.py
 ```
 
+### 📥 Data Download Instructions
+Due to GitHub's file size limits, the main dataset (`pizza_sales_data23.csv`) is not hosted in this repository. 
 
+To run this project locally, please download the dataset from the source link below and place it inside the `data/` folder before running the app.
+
+* **Dataset Link:** [pizza_sales_data23.csv](https://drive.google.com/file/d/1O-w4lcOfpSgF9cTy8a9rWrwxZ3yf8AIt/view?usp=drive_link)
+* **Expected File Name:** `pizza_sales_data23.csv`
 
 ## 🙋‍♀️ Author
 
