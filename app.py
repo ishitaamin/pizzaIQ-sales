@@ -32,7 +32,7 @@ df_discount = load_csv("discount.csv")
 df_peak = load_csv("updated_orders.csv")
 df_summary = load_csv("pizza_sales_summary.csv")
 df_size = load_csv("pizza_size_distribution.csv")
-df_overall = load_csv("pizza_sales_data23.zip") # Assuming you kept the .zip!
+df_overall = load_csv("pizza_sales_data23.csv.zip") # Assuming you kept the .zip!
 
 # --- Load Pre-trained ML Models ---
 @st.cache_resource(show_spinner=False)
