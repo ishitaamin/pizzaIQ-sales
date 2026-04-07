@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import joblib
+import os
 
 # Import our custom cached data loader
 from utils.data_loader import load_csv
@@ -18,7 +20,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("<div class='main-header'>🍕 PizzaSalesIQ</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-header'>Interactive Business Intelligence & Sales Dashboard</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-header'>Interactive Business Intelligence & AI Forecasting</div>", unsafe_allow_html=True)
 st.markdown("---")
 
 # --- Load All Data Upfront ---
@@ -27,17 +29,29 @@ df_last_week = load_csv("1.csv", date_columns=["order_date"])
 df_monthly = load_csv("month_sales.csv")
 df_avg = load_csv("avg.csv")
 df_discount = load_csv("discount.csv")
-df_peak = load_csv("updated_orders.csv") # FIXED: using updated_orders.csv
+df_peak = load_csv("updated_orders.csv")
 df_summary = load_csv("pizza_sales_summary.csv")
 df_size = load_csv("pizza_size_distribution.csv")
-df_overall = load_csv("pizza_sales_data23.csv")
+df_overall = load_csv("pizza_sales_data23.zip") # Assuming you kept the .zip!
+
+# --- Load Pre-trained ML Models ---
+@st.cache_resource(show_spinner=False)
+def load_models():
+    """Loads the pre-trained dictionary of models from disk only once."""
+    model_path = 'models/pizza_models.pkl'
+    if os.path.exists(model_path):
+        return joblib.load(model_path)
+    return None
+
+models_dict = load_models()
 
 # --- Tabbed Navigation Layout ---
-tab1, tab2, tab3, tab4 = st.tabs([
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "📊 Executive Summary", 
     "📈 Trends & Seasonality", 
     "🍕 Pizza Analytics", 
-    "👥 Customer Behavior"
+    "👥 Customer Behavior",
+    "🔮 AI Inventory Forecast"
 ])
 
 # ==========================================
@@ -73,7 +87,6 @@ with tab1:
 
             # Revenue over time chart
             st.subheader("Monthly Revenue Growth")
-            # FIXED: Using 'ME' instead of 'M' to resolve the Pandas ValueError
             revenue_by_month = df_overall.groupby(pd.Grouper(key='order_date', freq='ME')).apply(lambda x: (x['quantity'] * x['price']).sum())
             revenue_by_month = revenue_by_month.reset_index().rename(columns={0: 'monthly_revenue'})
             
@@ -82,7 +95,7 @@ with tab1:
         except Exception as e:
             st.error(f"Error processing overall insights: {e}")
     else:
-        st.warning("Missing 'pizza_sales_data23.csv'.")
+        st.warning("Missing 'pizza_sales_data23' dataset.")
 
     st.markdown("---")
     
@@ -204,3 +217,90 @@ with tab4:
             st.success(f"🎯 **Marketing Insight:** The **{top_discount}** discount drives the most conversions. Emphasize this mechanic in future ad spend.")
         else:
             st.warning("Missing 'discount.csv'.")
+
+# ==========================================
+# TAB 5: AI INVENTORY FORECAST
+# ==========================================
+with tab5:
+    st.markdown("<h2 style='color:#8E44AD;'>Next-Week Demand Predictions</h2>", unsafe_allow_html=True)
+    st.write("Instantly generating next week's inventory requirements using pre-trained Holt-Winters Exponential Smoothing models.")
+
+    if models_dict is None:
+        st.error("⚠️ Pre-trained models not found! Please run 'models/train_model.py' first to generate the models.")
+    else:
+        forecasts = {}
+        with st.spinner("⏳ Running AI inference engine..."):
+            for (name, size), fit_model in models_dict.items():
+                try:
+                    pred = fit_model.forecast(1)
+                    forecasts[(name, size)] = int(round(pred.iloc[0]))
+                except Exception as e:
+                    forecasts[(name, size)] = "Error"
+
+        # Convert to DataFrame
+        pred_df = pd.DataFrame([
+            {'Pizza Name': name, 'Size': size, 'Predicted Quantity': qty}
+            for (name, size), qty in forecasts.items()
+        ])
+        
+        # Clean data (handle any potential 'Error' strings from failed models)
+        pred_df['Predicted Quantity'] = pd.to_numeric(pred_df['Predicted Quantity'], errors='coerce').fillna(0).astype(int)
+
+        # --- Top Level Metrics ---
+        total_predicted = pred_df['Predicted Quantity'].sum()
+        top_pizza_row = pred_df.loc[pred_df['Predicted Quantity'].idxmax()]
+        top_pizza_name = f"{top_pizza_row['Pizza Name']} ({top_pizza_row['Size']})"
+        top_pizza_qty = top_pizza_row['Predicted Quantity']
+
+        col_f1, col_f2, col_f3 = st.columns(3)
+        col_f1.metric(label="Total Pizzas to Prep Next Week", value=f"{total_predicted:,}")
+        col_f2.metric(label="Highest Demand Item", value=top_pizza_name)
+        col_f3.metric(label="Peak Item Quantity", value=f"{top_pizza_qty:,}")
+
+        st.markdown("---")
+
+        # --- Detailed Visualizations ---
+        col_table, col_chart = st.columns([1.2, 1])
+
+        with col_table:
+            st.subheader("📋 Detailed Action Plan")
+            st.write("Review the specific inventory requirements per item.")
+            
+            # Advanced Streamlit Dataframe with embedded progress bars
+            st.dataframe(
+                pred_df.sort_values('Predicted Quantity', ascending=False),
+                column_config={
+                    "Predicted Quantity": st.column_config.ProgressColumn(
+                        "Predicted Quantity",
+                        help="Volume of pizzas predicted for next week",
+                        format="%d",
+                        min_value=0,
+                        max_value=int(pred_df['Predicted Quantity'].max()),
+                    ),
+                },
+                hide_index=True,
+                use_container_width=True,
+                height=400
+            )
+
+        with col_chart:
+            st.subheader("📈 Top 10 Items to Stock")
+            st.write("Focus supply chain efforts on these high-velocity items.")
+            
+            top_10 = pred_df.sort_values('Predicted Quantity', ascending=False).head(10)
+            # Create a combined label for the chart
+            top_10['Item'] = top_10['Pizza Name'] + " (" + top_10['Size'] + ")"
+            
+            st.bar_chart(top_10.set_index('Item')['Predicted Quantity'], color="#8E44AD")
+
+        # --- Download Section ---
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.info("💡 **Export Data:** Download these predictions to integrate with your existing Kitchen Display System (KDS) or inventory management software.")
+        
+        csv = pred_df.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="📥 Download Predictions as CSV",
+            data=csv,
+            file_name='next_week_pizza_predictions.csv',
+            mime='text/csv'
+        )

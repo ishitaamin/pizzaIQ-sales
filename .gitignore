@@ -3,6 +3,5 @@ __pycache__/
 .DS_Store
 *.pkl
 data/pizza_sales_data23.csv
-data/pizza_sales_data23.zip
-
+!data/pizza_sales_data23.zip
 !models/pizza_models.pkl
