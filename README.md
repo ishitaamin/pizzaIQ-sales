@@ -90,30 +90,30 @@ PizzaSalesIQ/
 
 ### 💻 Installation & Local Setup
 
-## To run this project locally, it is highly recommended to use a Python Virtual Environment to manage dependencies cleanly.
+To run this project locally, it is highly recommended to use a Python Virtual Environment to manage dependencies cleanly.
 
-## 1. Clone the repository:
+### 1. Clone the repository:
 ```bash
 git clone [https://github.com/yourusername/PizzaSalesIQ.git](https://github.com/yourusername/PizzaSalesIQ.git)
 cd PizzaSalesIQ
 ```
 
-## 2. Create and activate a Virtual Environment:
+### 2. Create and activate a Virtual Environment:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-## 3. Install dependencies:
+### 3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 🏃‍♂️ Usage Guide
 
-## Step 1: Train the Forecasting Models
+### Step 1: Train the Forecasting Models
 
-## Before running the prediction dashboard, you must train the machine learning models on the historical data. This script processes the data, trains an Exponential Smoothing model for every pizza/size combination, and saves them to disk.
+Before running the prediction dashboard, you must train the machine learning models on the historical data. This script processes the data, trains an Exponential Smoothing model for every pizza/size combination, and saves them to disk.
 
 ```bash
 cd models
@@ -122,14 +122,14 @@ python train_model.py
 
 ## Step 2: Launch the Dashboards
 
-## Return to the root directory and use Streamlit to launch the applications.
+ Return to the root directory and use Streamlit to launch the applications.
 
-# To view the Business Intelligence Dashboard:
+### To view the Business Intelligence Dashboard:
 ```bash
 cd ..
 streamlit run app.py
 ```
-# To view the real-time AI Forecasting Tool:
+### To view the real-time AI Forecasting Tool:
 ```bash
 cd ..
 streamlit run predict.py
