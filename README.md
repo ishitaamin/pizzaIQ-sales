@@ -4,6 +4,13 @@
 
 This project goes beyond simple data visualization by implementing a production-grade architecture, including decoupled machine learning training, memory-efficient data caching, and a highly optimized Streamlit user interface.
 
+## 🚀 Live Demo
+
+Experience the application in real-time:
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Try_Now-3b82f6?style=for-the-badge&logo=vercel)](pizzasalesiq.streamlit.app)
+
+> ⚡ No installation required — open and explore instantly.
 ---
 
 ## 🚀 Key Features & Business Value
