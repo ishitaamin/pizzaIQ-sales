@@ -8,8 +8,7 @@ This project goes beyond simple data visualization by implementing a production-
 
 Experience the application in real-time:
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Try_Now-3b82f6?style=for-the-badge&logo=vercel)](pizzasalesiq.streamlit.app)
-
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Try_Now-3b82f6?style=for-the-badge&logo=vercel)](https://pizzasalesiq.streamlit.app)
 > ⚡ No installation required — open and explore instantly.
 ---
 
